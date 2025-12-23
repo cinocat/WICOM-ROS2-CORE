@@ -1,0 +1,17 @@
+# UDP Server Configuration for WICOM ROS2 Bridge
+
+udp_server_node:
+  ros__parameters:
+    # UDP port to bind
+    port: 12345
+    
+    # Rate for sending drone status updates to VR client (seconds)
+    status_send_rate: 0.5
+    
+    # Timeout for position commands (seconds)
+    # If no position command received within this time, position control is disabled
+    position_timeout: 0.1
+    
+    # Rate for publishing offboard setpoints to PX4 (seconds)
+    # Should be >= 20Hz (0.05s) for offboard mode
+    offboard_rate: 0.05
