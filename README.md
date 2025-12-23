@@ -174,6 +174,42 @@ The bridge waits for the first UDP packet from the VR client before sending data
 - Install px4_msgs: `sudo apt install ros-humble-px4-msgs` or build from source
 - Check all dependencies are installed
 
+## Testing
+
+### Test UDP Client
+
+A Python test client is provided to test the bridge without the VR client:
+
+```bash
+# Interactive mode
+python3 test_udp_client.py localhost
+
+# Automated test sequence
+python3 test_udp_client.py localhost test
+```
+
+Available commands in interactive mode:
+- `arm` / `disarm` - Arm or disarm the vehicle
+- `offboard` - Set offboard mode
+- `takeoff <altitude>` - Takeoff to specified altitude
+- `land` - Land the vehicle
+- `pos <x> <y> <z> <yaw>` - Send position setpoint
+- `vel <vx> <vy> <vz> <yaw_rate>` - Send velocity setpoint
+- `enable_pos` / `disable_pos` - Enable/disable position control
+- `enable_vel` / `disable_vel` - Enable/disable velocity control
+- `listen` - Listen for drone status messages
+
+## Protocol Documentation
+
+For detailed UAVLink protocol specification, see [PROTOCOL.md](PROTOCOL.md).
+
+This includes:
+- Message structure and IDs
+- Command reference
+- Coordinate frames
+- Network byte order encoding
+- Unity C# example code
+
 ## Development
 
 ### Building in Debug Mode
