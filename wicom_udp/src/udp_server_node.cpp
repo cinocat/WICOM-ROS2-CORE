@@ -270,6 +270,12 @@ void UdpServerNode::handle_command(const UAVLinkCommand& cmd) {
             }
             break;
             
+        case UAVLINK_CMD_VELOCITY_CONTROL_MODE:
+            velocity_control_active_ = (cmd.param1 > 0.5);
+            RCLCPP_INFO(this->get_logger(), "Velocity control mode: %s", 
+                       velocity_control_active_ ? "enabled" : "disabled");
+            break;
+            
         default:
             RCLCPP_WARN(this->get_logger(), "Unhandled command: %d", cmd.cmd_id);
             break;
@@ -360,13 +366,15 @@ void UdpServerNode::takeoff(float altitude) {
         position_control_active_ = true;
         last_position_command_time_ = this->now();
         
-        // Enable offboard mode after a brief period
+        // Start streaming setpoints first, then switch to offboard mode
+        // The offboard timer will handle streaming at 20Hz
         offboard_mode_active_ = true;
+        
+        RCLCPP_INFO(this->get_logger(), 
+                   "Started streaming setpoints. Arm and switch to offboard mode via VR client.");
+    } else {
+        RCLCPP_WARN(this->get_logger(), "No local position available for takeoff");
     }
-    
-    // Alternative: use PX4 takeoff command
-    send_vehicle_command(px4_msgs::msg::VehicleCommand::VEHICLE_CMD_NAV_TAKEOFF, 
-                        0.0, 0.0, 0.0, NAN, 0.0, 0.0, altitude);
 }
 
 void UdpServerNode::land() {

@@ -119,12 +119,17 @@ The bridge uses the following PX4 topics:
 - `/fmu/in/offboard_control_mode`
 - `/fmu/in/trajectory_setpoint`
 
-## Offboard Mode
+## Offboard Mode Sequence
 
-The bridge implements the PX4 offboard mode correctly:
-1. Streams setpoints at >= 20Hz before switching to offboard mode
-2. Continues streaming setpoints while in offboard mode
-3. Position or velocity control can be selected
+For proper PX4 offboard control, follow this sequence:
+
+1. **Start Streaming Setpoints**: Send TAKEOFF command or enable position/velocity control
+   - Bridge begins streaming setpoints at 20Hz automatically
+2. **Arm the Vehicle**: Send ARM command
+3. **Switch to Offboard Mode**: Send SET_MODE command with OFFBOARD mode
+4. **Continue Streaming**: Bridge maintains 20Hz setpoint stream while in offboard mode
+
+The bridge handles the setpoint streaming automatically. Just ensure commands are sent in the correct order.
 
 ## Usage with VR Client
 
